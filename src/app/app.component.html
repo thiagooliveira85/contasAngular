@@ -1,0 +1,61 @@
+<div class="container">
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <h1>Lançamentos</h1>
+    </div>
+    
+    <div class="ui-g-12 ui-fluid">
+      <label>Descrição</label>
+      <input type="text" pInputText>
+    </div>
+
+    <div class="ui-g-12">
+        <label style="display: block">Vencimento</label>
+        <input type="text" pInputText style="width: 95px">
+
+        <label> até </label>
+        <input type="text" pInputText style="width: 95px">
+    </div>
+
+    <div class="ui-g-12">
+      <button pButton type="submit" label="Pesquisar"></button>
+    </div>
+
+  </div>
+
+  <div class="ui-g">
+      <div class="ui-g-12">
+          <p-table [value]="lancamentos" [paginator]="paginacao" [rows]="5">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>Descrição</th>
+                      <th>Vencimento</th>
+                      <th>Pagamento</th>
+                      <th>Parcelas</th>                      
+                      <th class="col-valor">Valor</th>
+                      <th></th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-lanc>
+                  <tr>
+                      <td>{{lanc.descricao}}</td>
+                      <td class="col-data">{{lanc.vencimento}}</td>
+                      <td [ngStyle]="{color: lanc.pagamento === 'PAGO' ? 'blue' : 'red'}">{{lanc.pagamento}}</td>
+                      <td>{{lanc.parcelas}}</td>                      
+                      <td>{{lanc.valor}}</td>
+                      <td>
+                        <button pButton type="button" icon="pi pi-pencil"></button> 
+                        <button pButton type="button" icon="pi pi-trash"></button>
+                      </td>
+                  </tr>
+              </ng-template>
+          </p-table>
+      </div>
+      <div class="ui-g-12">
+          <button pButton type="submit" label="Novo Lançamento"></button>
+      </div>
+  </div>
+
+</div>
+
