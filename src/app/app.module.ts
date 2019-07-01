@@ -9,14 +9,17 @@ import { FormsModule } from '@angular/forms';
 import {DialogModule} from 'primeng/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import { HttpClientModule } from '@angular/common/http';
 
 import { LancamentoCadastroComponent } from './lancamento-cadastro/lancamento-cadastro.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LancamentoCadastroComponent    
+    LancamentoCadastroComponent,
+    NavbarComponent    
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,8 @@ import { LancamentoCadastroComponent } from './lancamento-cadastro/lancamento-ca
     FormsModule,
     DialogModule,
     BrowserAnimationsModule,
-    SelectButtonModule           
+    SelectButtonModule,
+    HttpClientModule           
   ],
   providers: [],
   bootstrap: [AppComponent]

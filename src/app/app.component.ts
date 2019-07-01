@@ -3,6 +3,7 @@ import { LancamentoPesquisa } from './lancamento-pesquisa';
 import { Lancamento } from './lancamento';
 import { SelectItem } from 'primeng/components/common/selectitem';
 import { NgForm } from '@angular/forms';
+import { ContasService } from './contas.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { NgForm } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
 
-  statusPagamento: SelectItem[];
+  statusPagamentos: SelectItem[];
   
   display: boolean;
 
@@ -23,68 +24,51 @@ export class AppComponent implements OnInit {
 
   lancamentosAux = [];
 
-  public lancamentos = [{
-    descricao: 'AMEX',
-    vencimento: '08/07/2019',
-    valor: 200.00,
-    parcelas: '1/12',
-    status: 'PENDENTE'
-  },
-  {
-    descricao: 'Dentista',
-    vencimento: '01/07/2019',
-    valor: 150.00,
-    parcelas: 'À Vista',
-    status: 'PAGO'
-  },
-  {
-    descricao: 'Light',
-    vencimento: '01/07/2019',
-    valor: 330.00,
-    parcelas: 'À Vista',
-    status: 'PAGO'
-  }
-  ];
+  lancamentos: Lancamento[] = [];
 
-  constructor(){
-    this.lancamento.status = "PENDENTE";
+  constructor(private contasService:ContasService){
+    
+    this.lancamento.statusPagamento = "PENDENTE";
 
-    this.statusPagamento = [
+    this.statusPagamentos = [
       {label: 'Pago', value: 'PAGO', icon: 'fa fa-check'},
       {label: 'Pendente', value: 'PENDENTE', icon: 'fa fa-spinner'},
       {label: 'Vencido', value: 'VENCIDO', icon: 'fa fa-times'}
     ];
+   
   }
   
 
   ngOnInit(): void {
-    if (this.lancamentos.length > 5) {
-      this.paginacao = true;
-    } else {
-      this.paginacao = false;
-    }
-    this.lancamentosAux = this.lancamentos;
+    this.listarContas();  
+  }
+
+  listarContas(){
+    this.contasService.listarContas().subscribe(
+      response => {
+        this.lancamentos = response;
+        if (this.lancamentos.length > 10) {
+          this.paginacao = true;
+        } else {
+          this.paginacao = false;
+        }
+      }
+    );
   }
 
   pesquisar(){
     
-    let obj = this.lancamentos.find( obj => obj.descricao === this.lancamentoPesquisa.descricao);
     
-    if (obj != null && obj.descricao != ""){
-      this.lancamentos = [obj];
-    }else{
-      this.lancamentos = this.lancamentosAux;
-    }   
-
   }
 
   showDialog() {
     this.display = true;
   }
 
-  cadastrar(form:NgForm){
-      this.lancamentos.push(this.lancamento);
-      this.clearForm(form);
+  cadastrar(form:NgForm){      
+    this.contasService.salvarConta(this.lancamento).subscribe();
+    this.clearForm(form);
+    this.listarContas();
   }
 
   clearForm(form:NgForm){

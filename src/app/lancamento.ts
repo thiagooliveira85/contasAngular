@@ -1,10 +1,10 @@
 export class Lancamento {
 
     descricao: string;
-    vencimento: string;
+    dataVencimento: string;
     valor: number;
     parcelas: string;
-    status: string;
+    statusPagamento: string;
 
     constructor(){}
 

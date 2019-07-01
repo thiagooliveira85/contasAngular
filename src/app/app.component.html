@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="container">
 
   <div class="ui-g">
@@ -31,7 +32,7 @@
 
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-table [value]="lancamentos" [paginator]="paginacao" [rows]="5">
+      <p-table [(value)]="lancamentos" [paginator]="paginacao" [rows]="10" [responsive]="true">
         <ng-template pTemplate="header">
           <tr>
             <th>Descrição</th>
@@ -45,8 +46,8 @@
         <ng-template pTemplate="body" let-lanc>
           <tr>
             <td>{{lanc.descricao}}</td>
-            <td class="col-data">{{lanc.vencimento}}</td>
-            <td class="text-right" [ngStyle]="{color: lanc.status === 'PAGO' ? 'blue' : 'red'}">{{lanc.status}}
+            <td class="col-data">{{lanc.dataVencimento}}</td>
+            <td class="text-right" [ngStyle]="{color: lanc.statusPagamento === 'PAGO' ? 'blue' : 'red'}">{{lanc.statusPagamento}}
             </td>
             <td>{{lanc.parcelas}}</td>
             <td>{{lanc.valor}}</td>
@@ -76,12 +77,12 @@
 
       <div class="ui-g-12 ui-fluid">
         <label style="display: block">Vencimento</label>
-        <input type="text" pInputText name="vencimento" [(ngModel)]="lancamento.vencimento" required #vencField="ngModel">
+        <input type="text" pInputText name="dataVencimento" [(ngModel)]="lancamento.dataVencimento" required #vencField="ngModel">
         <div class="validador" *ngIf="vencField.hasError('required') && vencField.touched">Informe uma data de vencimento</div>
       </div>
 
       <div class="ui-g-12 ui-fluid">
-        <p-selectButton [options]="statusPagamento" name="status" [(ngModel)]="lancamento.status"></p-selectButton>
+        <p-selectButton [options]="statusPagamentos" name="statusPagamento" [(ngModel)]="lancamento.statusPagamento"></p-selectButton>
       </div>
 
       <div class="ui-g-12 ui-fluid">
@@ -102,8 +103,7 @@
       <button type="button" pButton (click)="display=false" label="Cadastrar" (click)="cadastrar(cadastroForm)" [disabled]="!cadastroForm.valid"></button>
       <button type="button" pButton (click)="display=false" label="Cancelar" class="ui-button-secondary"></button>
     </p-footer>
-
-
+  
   </p-dialog>
 
 </div>
