@@ -4,58 +4,106 @@
     <div class="ui-g-12">
       <h1>Lançamentos</h1>
     </div>
-    
-    <div class="ui-g-12 ui-fluid">
-      <label>Descrição</label>
-      <input type="text" pInputText>
-    </div>
 
-    <div class="ui-g-12">
+    <form #lancForm="ngForm">
+      <div class="ui-g-12 ui-fluid">
+        <label>Descrição</label>
+        <input type="text" pInputText name="descricao" [(ngModel)]="lancamentoPesquisa.descricao">
+      </div>
+
+      <div class="ui-g-12">
         <label style="display: block">Vencimento</label>
-        <input type="text" pInputText style="width: 95px">
+        <input type="text" pInputText style="width: 95px" name="vencimentoDtInicio"
+          [(ngModel)]="lancamentoPesquisa.vencimentoDtInicio">
 
         <label> até </label>
-        <input type="text" pInputText style="width: 95px">
-    </div>
+        <input type="text" pInputText style="width: 95px" name="vencimentoDtFim"
+          [(ngModel)]="lancamentoPesquisa.vencimentoDtFim">
+      </div>
 
-    <div class="ui-g-12">
-      <button pButton type="submit" label="Pesquisar"></button>
-    </div>
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Pesquisar" (click)="pesquisar()"></button>
+      </div>
+
+    </form>
 
   </div>
 
   <div class="ui-g">
-      <div class="ui-g-12">
-          <p-table [value]="lancamentos" [paginator]="paginacao" [rows]="5">
-              <ng-template pTemplate="header">
-                  <tr>
-                      <th>Descrição</th>
-                      <th>Vencimento</th>
-                      <th>Pagamento</th>
-                      <th>Parcelas</th>                      
-                      <th class="col-valor">Valor</th>
-                      <th></th>
-                  </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-lanc>
-                  <tr>
-                      <td>{{lanc.descricao}}</td>
-                      <td class="col-data">{{lanc.vencimento}}</td>
-                      <td [ngStyle]="{color: lanc.pagamento === 'PAGO' ? 'blue' : 'red'}">{{lanc.pagamento}}</td>
-                      <td>{{lanc.parcelas}}</td>                      
-                      <td>{{lanc.valor}}</td>
-                      <td>
-                        <button pButton type="button" icon="pi pi-pencil"></button> 
-                        <button pButton type="button" icon="pi pi-trash"></button>
-                      </td>
-                  </tr>
-              </ng-template>
-          </p-table>
-      </div>
-      <div class="ui-g-12">
-          <button pButton type="submit" label="Novo Lançamento"></button>
-      </div>
+    <div class="ui-g-12">
+      <p-table [value]="lancamentos" [paginator]="paginacao" [rows]="5">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Descrição</th>
+            <th>Vencimento</th>
+            <th>Status</th>
+            <th>Parcelas</th>
+            <th class="col-valor">Valor</th>
+            <th class="col-botoes"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-lanc>
+          <tr>
+            <td>{{lanc.descricao}}</td>
+            <td class="col-data">{{lanc.vencimento}}</td>
+            <td class="text-right" [ngStyle]="{color: lanc.status === 'PAGO' ? 'blue' : 'red'}">{{lanc.status}}
+            </td>
+            <td>{{lanc.parcelas}}</td>
+            <td>{{lanc.valor}}</td>
+            <td class="col-botoes">
+              <button pButton type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                style="margin-right: 10px;"></button>
+              <button pButton type="button" icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="ui-g-12">
+      <button pButton type="submit" label="Novo Lançamento" (click)="showDialog()"></button>
+    </div>
   </div>
 
-</div>
+  <p-dialog header="Novo Lançamento" [(visible)]="display" [modal]="true" [responsive]="true"
+    [style]="{width: '350px', minWidth: '200px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
 
+    <form #cadastroForm="ngForm">
+      <div class="ui-g-12 ui-fluid">
+        <label>Descrição</label>
+        <input type="text" pInputText name="descricao" [(ngModel)]="lancamento.descricao" required #descricaoField="ngModel">
+        <div class="validador" *ngIf="descricaoField.hasError('required') && descricaoField.touched">Informe uma descrição</div>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <label style="display: block">Vencimento</label>
+        <input type="text" pInputText name="vencimento" [(ngModel)]="lancamento.vencimento" required #vencField="ngModel">
+        <div class="validador" *ngIf="vencField.hasError('required') && vencField.touched">Informe uma data de vencimento</div>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <p-selectButton [options]="statusPagamento" name="status" [(ngModel)]="lancamento.status"></p-selectButton>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <label>Parcelas</label>
+        <input type="text" pInputText name="parcelas" [(ngModel)]="lancamento.parcelas" required #parcField="ngModel"> 
+        <div class="validador" *ngIf="parcField.hasError('required') && parcField.touched">Informe as parcelas ou à vista</div>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <label>Valor</label>
+        <input type="text" pInputText name="valor" [(ngModel)]="lancamento.valor" required #valorField="ngModel">
+        <div class="validador" *ngIf="valorField.hasError('required') && valorField.touched">Informe o valor da conta</div>
+      </div>
+
+    </form>
+
+    <p-footer>
+      <button type="button" pButton (click)="display=false" label="Cadastrar" (click)="cadastrar(cadastroForm)" [disabled]="!cadastroForm.valid"></button>
+      <button type="button" pButton (click)="display=false" label="Cancelar" class="ui-button-secondary"></button>
+    </p-footer>
+
+
+  </p-dialog>
+
+</div>
